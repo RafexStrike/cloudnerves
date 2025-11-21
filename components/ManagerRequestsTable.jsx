@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import PendingRequestCard from './PendingRequestCard';
 import BlockStudentModal from './BlockStudentModal';
 import BlockedStudentsSection from './BlockedStudentsSection';
+import PendingOnboardingSection from './PendingOnboardingSection';
 
 /**
  * ManagerRequestsTable Component
@@ -244,6 +245,11 @@ export default function ManagerRequestsTable() {
             <div className="stat-value text-error">{stats.denied}</div>
           </div>
         </div>
+      </div>
+
+      {/* Pending Onboarding Section */}
+      <div className="mb-8">
+        <PendingOnboardingSection />
       </div>
 
       {/* Pending Requests Section */}

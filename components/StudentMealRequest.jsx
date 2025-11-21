@@ -70,12 +70,14 @@ export default function StudentMealRequest({ user }) {
       });
 
       if (!response.ok) {
-        // Handle blocked student error
+        const error = await response.json();
+        
+        // Handle 403 errors (blocked or pending approval)
         if (response.status === 403) {
-          throw new Error('🚫 You have been blocked from making meal requests. Contact administration.');
+          throw new Error(error.error || '🚫 You cannot make requests at this time.');
         }
         
-        const error = await response.json();
+        // Handle other errors
         throw new Error(error.error || 'Failed to request meal');
       }
 
