@@ -67,6 +67,16 @@ export async function POST(request) {
 
     const db = await connectToDatabase();
     const requestsCollection = db.collection('mealRequests');
+    const usersCollection = db.collection('users');
+
+    // STEP 2.5: Check if student is onboarded - return 403 if not approved by manager
+    const student = await usersCollection.findOne({ uid: studentId });
+    if (!student || !student.isOnboarded) {
+      return NextResponse.json(
+        { error: 'Your account is pending manager approval. You will be able to make requests once approved.' },
+        { status: 403 }
+      );
+    }
 
     // STEP 3: Check if student is blocked - return 403 if blocked
     const studentBlockStatus = await requestsCollection.findOne({ studentId });

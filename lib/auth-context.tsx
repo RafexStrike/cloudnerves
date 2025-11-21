@@ -39,7 +39,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signup = async (email: string, password: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Step 1: Create Firebase user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
+
+      // Step 2: Create MongoDB user document with role and onboarding flag
+      const mongoResponse = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName || '',
+          photoURL: firebaseUser.photoURL || '',
+          phoneNumber: firebaseUser.phoneNumber || '',
+        }),
+      });
+
+      if (!mongoResponse.ok) {
+        const errorData = await mongoResponse.json();
+        throw new Error(errorData.error || 'Failed to create user profile');
+      }
+
+      console.log('✓ User created in Firebase and MongoDB');
     } catch (error) {
       throw error;
     }

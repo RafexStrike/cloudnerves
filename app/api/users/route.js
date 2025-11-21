@@ -25,13 +25,16 @@ export async function POST(request) {
 
     console.log('Creating new user:', userData.uid);
 
-    // Create new user
+    // Create new user with onboarding flag set to false and role set to "student"
+    // Student will not be able to make requests until manager approves (sets isOnboarded to true)
     const result = await usersCollection.insertOne({
       uid: userData.uid,
       displayName: userData.displayName || '',
       email: userData.email || '',
       photoURL: userData.photoURL || '',
       phoneNumber: userData.phoneNumber || '',
+      role: 'student',           // ✅ NEW: Default role for all new signups
+      isOnboarded: false,        // Flag: Student is pending manager approval
       createdAt: new Date(),
       updatedAt: new Date(),
     });

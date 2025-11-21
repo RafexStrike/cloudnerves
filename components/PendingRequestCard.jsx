@@ -28,13 +28,13 @@ export default function PendingRequestCard({
   const getMealIcon = (mealType) => {
     switch (mealType?.toLowerCase()) {
       case 'breakfast':
-        return '🌅';
+        return '';
       case 'lunch':
-        return '🍽️';
+        return '';
       case 'dinner':
-        return '🌙';
+        return '';
       default:
-        return '🍴';
+        return '';
     }
   };
 
