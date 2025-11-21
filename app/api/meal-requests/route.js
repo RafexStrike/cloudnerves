@@ -81,18 +81,19 @@ export async function POST(request) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // STEP 5: Check if student ALREADY has a pending request for this meal type TODAY
+    // STEP 5: Check if student ALREADY has ANY request for this meal type TODAY
     // This prevents duplicate requests for the same meal type on the same day
+    // NO MATTER what status the request has (pending, accepted, denied, etc.)
     const existingRequest = await requestsCollection.findOne({
       studentId,
       mealType: mealType.toLowerCase(),
-      requestedAt: { $gte: today },
-      status: 'pending'
+      requestedAt: { $gte: today }
+      // Note: NO status filter - we check for ANY request regardless of status
     });
 
     if (existingRequest) {
       return NextResponse.json(
-        { error: `You already have a pending request for ${mealType} today` },
+        { error: `You already have a request for ${mealType} today. One request per meal per day allowed.` },
         { status: 409 }
       );
     }
